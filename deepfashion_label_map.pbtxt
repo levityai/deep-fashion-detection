@@ -1,12 +1,12 @@
 item {
   id: 1
-  name: 'top'
+  name: '1'
 }
 item {
   id: 2
-  name: 'bottom'
+  name: '2'
 }
 item {
   id: 3
-  name: 'long'
+  name: '3'
 }
