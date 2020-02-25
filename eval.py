@@ -40,6 +40,7 @@ Example usage:
 """
 import functools
 import os
+import json
 
 import tensorflow as tf
 from object_detection import evaluator
