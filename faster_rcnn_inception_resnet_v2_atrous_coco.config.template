@@ -120,9 +120,9 @@ train_config: {
 
 train_input_reader: {
   tf_record_input_reader {
-    input_path: "train.record"
+    input_path: "data/train.record"
   }
-  label_map_path: "label_map.pbtxt"
+  label_map_path: "data/label_map.pbtxt"
 }
 
 eval_config: {
@@ -133,9 +133,9 @@ eval_config: {
 
 eval_input_reader: {
   tf_record_input_reader {
-    input_path: "val.record"
+    input_path: "data/val.record"
   }
-  label_map_path: "label_map.pbtxt"
+  label_map_path: "data/label_map.pbtxt"
   shuffle: true
   num_readers: 1
 }
