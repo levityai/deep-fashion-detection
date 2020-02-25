@@ -4,6 +4,7 @@ Script to construct TensorFlow configuration protobuf files based on templates.
 
 import argparse
 from string import Template
+import utils
 
 
 def main(settings):
@@ -12,10 +13,20 @@ def main(settings):
         raw_template = file.read()
 
     template = Template(raw_template)
-    new_config = template.substitute(train_num_steps=settings.train_num_steps)
+
+    num_eval_examples = utils.get_num_eval_examples()
+
+    config = template.substitute(
+        {
+            "train_num_steps": settings.train_num_steps,
+            "eval_config_num_examples": num_eval_examples,
+            "eval_config_num_visualizations": num_eval_examples,
+            "num_classes": utils.get_num_classes()
+        }
+    )
 
     with open(settings.output_path, 'w') as file:
-        file.write(new_config)
+        file.write(config)
 
 
 def cli():

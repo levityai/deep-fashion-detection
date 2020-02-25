@@ -1,46 +1,3 @@
-# Copyright 2017 The TensorFlow Authors. All Rights Reserved.
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-# ==============================================================================
-
-r"""Training executable for detection models.
-
-This executable is used to train DetectionModels. There are two ways of
-configuring the training job:
-
-1) A single pipeline_pb2.TrainEvalPipelineConfig configuration file
-can be specified by --pipeline_config_path.
-
-Example usage:
-    ./train \
-        --logtostderr \
-        --train_dir=path/to/train_dir \
-        --pipeline_config_path=pipeline_config.pbtxt
-
-2) Three configuration files can be provided: a model_pb2.DetectionModel
-configuration file to define what type of DetectionModel is being trained, an
-input_reader_pb2.InputReader file to specify what training data will be used and
-a train_pb2.TrainConfig file to configure training parameters.
-
-Example usage:
-    ./train \
-        --logtostderr \
-        --train_dir=path/to/train_dir \
-        --model_config_path=model_config.pbtxt \
-        --train_config_path=train_config.pbtxt \
-        --input_config_path=train_input_config.pbtxt
-"""
-
 import functools
 import json
 import logging
@@ -50,6 +7,7 @@ import tensorflow as tf
 from object_detection import trainer
 from object_detection.builders import dataset_builder, model_builder
 from object_detection.utils import config_util, dataset_util
+
 
 tf.logging.set_verbosity(tf.logging.INFO)
 
