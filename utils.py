@@ -4,6 +4,7 @@ import io
 from object_detection.utils import dataset_util
 from PIL import Image
 import os
+import zipfile
 
 inputs_dir = os.getenv('VH_INPUTS_DIR')
 
@@ -82,6 +83,11 @@ def create_tf_example(example, path):
 
 
 def create_tf_records():
+    data_zip = os.path.join(inputs_dir, 'data/data.zip')
+    zipfile.ZipFile(data_zip).extractall()
+
+    print('os.listdir:', os.listdir('.'))
+
     train_json = os.path.join(inputs_dir, 'train_json/train.json')
     test_json = os.path.join(inputs_dir, 'test_json/test.json')
 
