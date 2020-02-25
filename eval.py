@@ -123,7 +123,7 @@ def main(unused_argv):
         FLAGS.checkpoint_dir,
         FLAGS.eval_dir
     )
-    json.dumps({'PascalBoxes_Precision/mAP@0.5IOU': str(metrics['PascalBoxes_Precision/mAP@0.5IOU'])})
+    print(json.dumps({'PascalBoxes_Precision/mAP@0.5IOU': str(metrics['PascalBoxes_Precision/mAP@0.5IOU'])}))
 
 
 if __name__ == '__main__':
