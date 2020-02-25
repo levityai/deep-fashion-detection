@@ -7,7 +7,8 @@ import os
 
 
 def get_classes():
-    with open('train.json', 'r') as f:
+    train_json = os.path.join(inputs_dir, 'train_json/train.json')
+    with open(train_json, 'r') as f:
         train = json.load(f)
 
     tags = []
