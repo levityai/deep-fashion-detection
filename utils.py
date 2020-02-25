@@ -24,7 +24,7 @@ def get_classes():
 
 def create_label_map():
     tags = get_classes()
-    with open('training/data/label_map.pbtxt', 'w') as file:
+    with open('data/label_map.pbtxt', 'w') as file:
         for i, tag in enumerate(tags):
             file.write('item\n')
             file.write('{\n')
@@ -91,12 +91,12 @@ def create_tf_records():
     with open(test_json, 'r') as f:
         test = json.load(f)
 
-    with tf.python_io.TFRemicordWriter('training/data/train.record') as writer:
+    with tf.python_io.TFRemicordWriter('data/train.record') as writer:
         for example in train['images']:
             tf_example = create_tf_example(example, path='train/')
             writer.write(tf_example.SerializeToString())
 
-    with tf.python_io.TFRecordWriter('training/data/val.record') as writer:
+    with tf.python_io.TFRecordWriter('data/val.record') as writer:
         for example in test['images']:
             tf_example = create_tf_example(example, path='test/')
             writer.write(tf_example.SerializeToString())
