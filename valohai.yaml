@@ -16,7 +16,7 @@
       - cp export_inference_graph.py training/
       - cd training/
       - unzip /valohai/inputs/data/data.zip
-      - python3 preprocess.py
+      - python3 /valohai/repository/preprocess.py
       - python3 train.py --logtostderr --train_dir=./models/train --pipeline_config_path=./faster_rcnn_inception_resnet_v2_atrous_coco.config
       - python3 export_inference_graph.py --input_type image_tensor --pipeline_config_path=./faster_rcnn_inception_resnet_v2_atrous_coco.config --trained_checkpoint_prefix=./models/train/model.ckpt-{parameters} --output_directory=./fine_tuned_model
       - zip -r fine_tuned_model.zip fine_tuned_model
