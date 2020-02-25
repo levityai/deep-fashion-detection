@@ -5,6 +5,8 @@ from object_detection.utils import dataset_util
 from PIL import Image
 import os
 
+inputs_dir = os.getenv('VH_INPUTS_DIR')
+
 
 def get_classes():
     train_json = os.path.join(inputs_dir, 'train_json/train.json')
@@ -80,7 +82,6 @@ def create_tf_example(example, path):
 
 
 def create_tf_records():
-    inputs_dir = os.getenv('VH_INPUTS_DIR')
     train_json = os.path.join(inputs_dir, 'train_json/train.json')
     test_json = os.path.join(inputs_dir, 'test_json/test.json')
 
@@ -90,7 +91,7 @@ def create_tf_records():
     with open(test_json, 'r') as f:
         test = json.load(f)
 
-    with tf.python_io.TFRecordWriter('training/data/train.record') as writer:
+    with tf.python_io.TFRemicordWriter('training/data/train.record') as writer:
         for example in train['images']:
             tf_example = create_tf_example(example, path='train/')
             writer.write(tf_example.SerializeToString())
@@ -107,7 +108,6 @@ def get_num_classes():
 
 
 def get_num_eval_examples():
-    inputs_dir = os.getenv('VH_INPUTS_DIR')
     test_json = os.path.join(inputs_dir, 'test_json/test.json')
 
     with open(test_json, 'r') as f:
