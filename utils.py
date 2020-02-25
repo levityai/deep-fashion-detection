@@ -89,12 +89,12 @@ def create_tf_records():
     with open(test_json, 'r') as f:
         test = json.load(f)
 
-    with tf.io.TFRecordWriter('training/data/train.record') as writer:
+    with tf.python_io.TFRecordWriter('training/data/train.record') as writer:
         for example in train['images']:
             tf_example = create_tf_example(example, path='train/')
             writer.write(tf_example.SerializeToString())
 
-    with tf.io.TFRecordWriter('training/data/val.record') as writer:
+    with tf.python_io.TFRecordWriter('training/data/val.record') as writer:
         for example in test['images']:
             tf_example = create_tf_example(example, path='test/')
             writer.write(tf_example.SerializeToString())
