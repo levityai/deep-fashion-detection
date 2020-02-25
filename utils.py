@@ -1,7 +1,7 @@
 import json
 import tensorflow as tf
 import io
-import dataset_util
+from object_detection.utils import dataset_util
 from PIL import Image
 
 
