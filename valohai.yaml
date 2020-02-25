@@ -7,15 +7,15 @@
       - export PYTHONPATH=$PYTHONPATH:/tensorflow/models/research:/tensorflow/models/research/slim
       - cd /tensorflow/models/research/object_detection/
       - mkdir -p training
-      - python3 /valohai/repository/config.py --template_path=/valohai/repository/faster_rcnn_inception_resnet_v2_atrous_coco.config.template --output_path=./training/faster_rcnn_inception_resnet_v2_atrous_coco.config --train_num_steps={parameters}
-      - cp /valohai/repository/train.py training/
       - mkdir training/data
       - mkdir training/models
+      - unzip /valohai/inputs/data/data.zip
+      - python3 /valohai/repository/config.py --template_path=/valohai/repository/faster_rcnn_inception_resnet_v2_atrous_coco.config.template --output_path=./training/faster_rcnn_inception_resnet_v2_atrous_coco.config --train_num_steps={parameters}
+      - cp /valohai/repository/train.py training/
       - tar -xzvf /valohai/inputs/pretrained_net/faster_rcnn_inception_resnet_v2_atrous_coco_2018_01_28.tar.gz -C training/models/ --strip-components=1
       - mkdir training/models/train
       - cp export_inference_graph.py training/
       - cd training/
-      - unzip /valohai/inputs/data/data.zip
       - python3 /valohai/repository/preprocess.py
       - python3 train.py --logtostderr --train_dir=./models/train --pipeline_config_path=./faster_rcnn_inception_resnet_v2_atrous_coco.config
       - python3 export_inference_graph.py --input_type image_tensor --pipeline_config_path=./faster_rcnn_inception_resnet_v2_atrous_coco.config --trained_checkpoint_prefix=./models/train/model.ckpt-{parameters} --output_directory=./fine_tuned_model
@@ -31,5 +31,7 @@
         default: 1000
     inputs:
       - name: data # gs://bucket/path/to/data.zip
+      - name: train_json
+      - name: test_json
       - name: pretrained_net
         default: https://s3-eu-west-1.amazonaws.com/valohai-examples/deep-fashion-detection/faster_rcnn_inception_resnet_v2_atrous_coco_2018_01_28.tar.gz

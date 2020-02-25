@@ -3,6 +3,7 @@ import tensorflow as tf
 import io
 from object_detection.utils import dataset_util
 from PIL import Image
+import os
 
 
 def get_classes():
@@ -78,10 +79,14 @@ def create_tf_example(example, path):
 
 
 def create_tf_records():
-    with open('train.json', 'r') as f:
+    inputs_dir = os.getenv('VH_INPUTS_DIR')
+    train_json = os.path.join(inputs_dir, 'train_json/train.json')
+    test_json = os.path.join(inputs_dir, 'test_json/test.json')
+
+    with open(train_json, 'r') as f:
         train = json.load(f)
 
-    with open('test.json', 'r') as f:
+    with open(test_json, 'r') as f:
         test = json.load(f)
 
     with tf.io.TFRecordWriter('training/data/train.record') as writer:
@@ -101,7 +106,10 @@ def get_num_classes():
 
 
 def get_num_eval_examples():
-    with open('test.json', 'r') as f:
+    inputs_dir = os.getenv('VH_INPUTS_DIR')
+    test_json = os.path.join(inputs_dir, 'test_json/test.json')
+
+    with open(test_json, 'r') as f:
         test = json.load(f)
 
     return len(test['images'])
