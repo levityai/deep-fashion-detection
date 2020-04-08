@@ -33,8 +33,8 @@ def create_label_map():
             file.write('}\n')
 
 
-def create_tf_example(example, path):
-    image = Image.open(path + example['path'])
+def create_tf_example(example):
+    image = Image.open('augmented/' + example['path'])
     width, height = image.size
     encoded_image_data = io.BytesIO()
     image.save(encoded_image_data, format='jpeg')
@@ -96,7 +96,7 @@ def create_tf_records():
     with tf.python_io.TFRecordWriter('data/train.record') as writer:
         for example in train['images']:
             if len(example['boxes']) > 0:
-                tf_example = create_tf_example(example, path='train/')
+                tf_example = create_tf_example(example)
                 writer.write(tf_example.SerializeToString())
             else:
                 continue
@@ -104,7 +104,7 @@ def create_tf_records():
     with tf.python_io.TFRecordWriter('data/val.record') as writer:
         for example in test['images']:
             if len(example['boxes']) > 0:
-                tf_example = create_tf_example(example, path='test/')
+                tf_example = create_tf_example(example)
                 writer.write(tf_example.SerializeToString())
             else:
                 continue
