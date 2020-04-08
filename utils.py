@@ -52,7 +52,7 @@ def create_tf_example(example, path):
     classes = []
 
     for box in example['boxes']:
-        classes.append(int(tags.index(box['tag']))
+        classes.append(int(tags.index(box['tag'])))
         classes_text.append(str(box['tag']).encode())
 
         xmins.append(float(box['x_min']))
