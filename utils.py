@@ -9,22 +9,19 @@ import zipfile
 inputs_dir = os.getenv('VH_INPUTS_DIR')
 
 
-def get_classes():
-    train_json = os.path.join(inputs_dir, 'train_json/train.json')
-    with open(train_json, 'r') as f:
-        train = json.load(f)
+train_json = os.path.join(inputs_dir, 'train_json/train.json')
+with open(train_json, 'r') as f:
+    train = json.load(f)
 
-    tags = []
-    for img in train['images']:
-        for box in img['boxes']:
-            tags.append(box['tag'])
+tags = []
+for img in train['images']:
+    for box in img['boxes']:
+        tags.append(box['tag'])
 
-    tags = list(set(tags))
-    return tags
+tags = list(set(tags))
 
 
 def create_label_map():
-    tags = get_classes()
     with open('data/label_map.pbtxt', 'w') as file:
         for i, tag in enumerate(tags):
             file.write('item\n')
@@ -55,7 +52,7 @@ def create_tf_example(example, path):
     classes = []
 
     for box in example['boxes']:
-        classes.append(int(box['tag']))
+        classes.append(int(tags.index(box['tag']))
         classes_text.append(str(box['tag']).encode())
 
         xmins.append(float(box['x_min']))
@@ -108,8 +105,7 @@ def create_tf_records():
 
 
 def get_num_classes():
-    classes = get_classes()
-    return len(classes)
+    return len(tags)
 
 
 def get_num_eval_examples():
