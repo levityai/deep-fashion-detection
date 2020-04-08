@@ -95,13 +95,19 @@ def create_tf_records():
 
     with tf.python_io.TFRecordWriter('data/train.record') as writer:
         for example in train['images']:
-            tf_example = create_tf_example(example, path='train/')
-            writer.write(tf_example.SerializeToString())
+            if len(example['boxes']) > 0:
+                tf_example = create_tf_example(example, path='train/')
+                writer.write(tf_example.SerializeToString())
+            else:
+                continue
 
     with tf.python_io.TFRecordWriter('data/val.record') as writer:
         for example in test['images']:
-            tf_example = create_tf_example(example, path='test/')
-            writer.write(tf_example.SerializeToString())
+            if len(example['boxes']) > 0:
+                tf_example = create_tf_example(example, path='test/')
+                writer.write(tf_example.SerializeToString())
+            else:
+                continue
 
 
 def get_num_classes():
