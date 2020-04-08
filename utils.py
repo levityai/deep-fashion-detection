@@ -37,13 +37,12 @@ def create_label_map():
 
 
 def create_tf_example(example, path):
-    image = Image.open(path + example['path']).resize((512, 512))
+    image = Image.open(path + example['path']))
+    width, height = image.size
     encoded_image_data = io.BytesIO()
     image.save(encoded_image_data, format='jpeg')
     encoded_image_data = encoded_image_data.getvalue()
 
-    height = 512
-    width = 512
     filename = example['path'].encode()
     image_format = 'jpeg'.encode()
 
