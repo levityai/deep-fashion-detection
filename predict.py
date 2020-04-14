@@ -5,12 +5,14 @@ import os
 import uvicorn
 import tensorflow as tf
 import numpy as np
+import urllib
+from PIL import Image
 
 app = FastAPI()
 prefix = os.environ.get('SCRIPT_PREFIX')
 
-# TODO: specify input (YAML) and unzip
-model = tf.saved_model.load('saved_model')
+zipfile.ZipFile('fine_tuned_model.zip').extractall()
+model = tf.saved_model.load('fine_tuned_model/saved_model')
 model = model.signatures['serving_default']
 
 
@@ -27,54 +29,32 @@ async def classify(payload: dict):
 
     predictions = model(input_tensor)
 
-    return {'predictions': predictions}
+    scores = predictions['detection_scores'].numpy()[0].tolist()
+    classes = predictions['detection_classes'].numpy()[0].tolist()
+    boxes = predictions['detection_boxes'].numpy()[0].tolist()
 
-    # sample = {
-    #     "boxes": [
-    #         [
-    #             {
-    #                 "class": "worm1",
-    #                 "score": "0.98123425",
-    #                 "x_min": "234",
-    #                 "x_max": "545",
-    #                 "y_min": "13",
-    #                 "y_max": "178",
-    #             },
-    #             {
-    #                 "class": "worm2",
-    #                 "score": "0.789345",
-    #                 "x_min": "234",
-    #                 "x_max": "545",
-    #                 "y_min": "13",
-    #                 "y_max": "178",
-    #             }
-    #         ],
-    #         [
-    #             {
-    #                 "class": "worm2",
-    #                 "score": "0.98123425",
-    #                 "x_min": "234",
-    #                 "x_max": "545",
-    #                 "y_min": "13",
-    #                 "y_max": "178",
-    #             },
-    #             {
-    #                 "class": "worm3",
-    #                 "score": "0.01453564",
-    #                 "x_min": "234",
-    #                 "x_max": "545",
-    #                 "y_min": "13",
-    #                 "y_max": "178",
-    #             }
-    #         ]
-    #     ]
-    # }
+    results = []
+    for score, label, box in zip(scores, classes, boxes):
+        if score > 0.2:
+            results.append(
+                {
+                    "label": label,
+                    "score": round(score, 10),
+                    "y_min": round(box[0], 10),
+                    "x_min": round(box[1], 10),
+                    "y_max": round(box[2], 10),
+                    "x_max": round(box[3], 10),
+                }
+            )
+        else:
+            break
+
+    return {'predictions': results}
 
 
 @app.get(prefix + "/", response_class=UJSONResponse)
 async def hello_world():
     """Hello world to check endpoint health"""
-    print(model.predict('bad book')[1].tolist())
     return {"message": "hello world"}
 
 
