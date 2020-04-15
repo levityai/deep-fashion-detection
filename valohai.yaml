@@ -28,16 +28,17 @@
         default: 1000
     inputs:
       - name: data # gs://bucket/path/to/data.zip
-      - name: train_json
-      - name: test_json
+      - name: data_json
       - name: pretrained_net
         default: https://s3-eu-west-1.amazonaws.com/valohai-examples/deep-fashion-detection/faster_rcnn_inception_resnet_v2_atrous_coco_2018_01_28.tar.gz
 
 - endpoint:
     name: classifier
     description: predict bounding boxes
-    image: tensorflow/tensorflow:1.13.1-py3
+    image: python:3.7.6
     server-command: python predict.py
     files:
       - name: fine_tuned_model
         path: fine_tuned_model.zip
+      - name: label_mapping
+        path: label_mapping.json

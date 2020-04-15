@@ -5,8 +5,10 @@ from object_detection.utils import dataset_util
 from PIL import Image
 import os
 import zipfile
+from sklearn.model_selection import train_test_split
 
 inputs_dir = os.getenv('VH_INPUTS_DIR')
+outputs_dir = os.getenv('VH_OUTPUTS_DIR')
 
 
 train_json = os.path.join(inputs_dir, 'train_json/train.json')
@@ -31,6 +33,13 @@ def create_label_map():
             file.write("name: '{0}'".format(str(tag)))
             file.write('\n')
             file.write('}\n')
+
+    label_mapping = {
+        'classes': dict(enumerate(tags)),
+    }
+
+    with open(os.path.join(outputs_dir, 'label_mapping.json'), 'w') as f:
+        json.dump(label_mapping, f)
 
 
 def create_tf_example(example):
@@ -82,19 +91,14 @@ def create_tf_records():
     data_zip = os.path.join(inputs_dir, 'data/data.zip')
     zipfile.ZipFile(data_zip).extractall()
 
-    print('os.listdir:', os.listdir('.'))
+    data_json = os.path.join(inputs_dir, 'data_json/data.json')
+    with open(data_json, 'r') as f:
+        data = json.load(f)
 
-    train_json = os.path.join(inputs_dir, 'train_json/train.json')
-    test_json = os.path.join(inputs_dir, 'test_json/test.json')
-
-    with open(train_json, 'r') as f:
-        train = json.load(f)
-
-    with open(test_json, 'r') as f:
-        test = json.load(f)
+    train, test = train_test_split(data['images'], test_size=0.2)
 
     with tf.python_io.TFRecordWriter('data/train.record') as writer:
-        for example in train['images']:
+        for example in train:
             if len(example['boxes']) > 0:
                 tf_example = create_tf_example(example)
                 writer.write(tf_example.SerializeToString())
@@ -102,7 +106,7 @@ def create_tf_records():
                 continue
 
     with tf.python_io.TFRecordWriter('data/val.record') as writer:
-        for example in test['images']:
+        for example in test:
             if len(example['boxes']) > 0:
                 tf_example = create_tf_example(example)
                 writer.write(tf_example.SerializeToString())
@@ -115,9 +119,12 @@ def get_num_classes():
 
 
 def get_num_eval_examples():
-    test_json = os.path.join(inputs_dir, 'test_json/test.json')
+    data_json = os.path.join(inputs_dir, 'data_json/data.json')
+    with open(data_json, 'r') as f:
+        data = json.load(f)
 
-    with open(test_json, 'r') as f:
-        test = json.load(f)
+    train, test = train_test_split(data['images'], test_size=0.2)
 
-    return len(test['images'])
+    return len(test)
+
+
