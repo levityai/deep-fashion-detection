@@ -11,12 +11,14 @@ inputs_dir = os.getenv('VH_INPUTS_DIR')
 outputs_dir = os.getenv('VH_OUTPUTS_DIR')
 
 
-train_json = os.path.join(inputs_dir, 'train_json/train.json')
-with open(train_json, 'r') as f:
-    train = json.load(f)
+data_json = os.path.join(inputs_dir, 'data_json/data.json')
+with open(data_json, 'r') as f:
+    data = json.load(f)
+
+train, test = train_test_split(data['images'], test_size=0.2)
 
 tags = []
-for img in train['images']:
+for img in train:
     for box in img['boxes']:
         tags.append(box['tag'])
 
@@ -91,12 +93,6 @@ def create_tf_records():
     data_zip = os.path.join(inputs_dir, 'data/data.zip')
     zipfile.ZipFile(data_zip).extractall()
 
-    data_json = os.path.join(inputs_dir, 'data_json/data.json')
-    with open(data_json, 'r') as f:
-        data = json.load(f)
-
-    train, test = train_test_split(data['images'], test_size=0.2)
-
     with tf.python_io.TFRecordWriter('data/train.record') as writer:
         for example in train:
             if len(example['boxes']) > 0:
@@ -119,12 +115,6 @@ def get_num_classes():
 
 
 def get_num_eval_examples():
-    data_json = os.path.join(inputs_dir, 'data_json/data.json')
-    with open(data_json, 'r') as f:
-        data = json.load(f)
-
-    train, test = train_test_split(data['images'], test_size=0.2)
-
     return len(test)
 
 
