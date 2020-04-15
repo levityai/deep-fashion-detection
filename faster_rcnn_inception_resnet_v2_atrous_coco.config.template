@@ -9,9 +9,9 @@ model {
   faster_rcnn {
     num_classes: $num_classes
     image_resizer {
-      fixed_shape_resizer {
-        height: 600
-        width: 600
+      keep_aspect_ratio_resizer {
+        min_dimension: 600
+        max_dimension: 1024
       }
     }
     feature_extractor {
@@ -84,7 +84,7 @@ model {
 }
 
 train_config: {
-  batch_size: 16
+  batch_size: 1
   optimizer {
     momentum_optimizer: {
       learning_rate: {
