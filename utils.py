@@ -116,5 +116,3 @@ def get_num_classes():
 
 def get_num_eval_examples():
     return len(test)
-
-

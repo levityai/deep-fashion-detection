@@ -14,7 +14,7 @@ app = FastAPI()
 prefix = os.environ.get('SCRIPT_PREFIX')
 
 zipfile.ZipFile('fine_tuned_model.zip').extractall()
-model = tf.saved_model.load('fine_tuned_model/saved_model')
+model = tf.compat.v1.saved_model.loader.load('fine_tuned_model/saved_model', tags=None)
 model = model.signatures['serving_default']
 
 with open('label_mapping.json', 'r') as f:
