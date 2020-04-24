@@ -38,6 +38,7 @@ async def classify(file: UploadFile = File(...)):
 
     results = []
     for score, label, box in zip(scores, classes, boxes):
+        label = int(float(label)) - 1
         results.append(
             {
                 "label": label_mapping[str(label)],
@@ -71,7 +72,7 @@ async def classify(data: dict):
         label = int(float(label)) - 1
         results.append(
             {
-                "label": label_mapping[label],
+                "label": label_mapping[str(label)],
                 "score": round(score, 10),
                 "y_min": round(box[0], 10),
                 "x_min": round(box[1], 10),
