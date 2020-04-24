@@ -38,19 +38,16 @@ async def classify(file: UploadFile = File(...)):
 
     results = []
     for score, label, box in zip(scores, classes, boxes):
-        if score > 0.2:
-            results.append(
-                {
-                    "label": label_mapping[str(label)],
-                    "score": round(score, 10),
-                    "y_min": round(box[0], 10),
-                    "x_min": round(box[1], 10),
-                    "y_max": round(box[2], 10),
-                    "x_max": round(box[3], 10),
-                }
-            )
-        else:
-            break
+        results.append(
+            {
+                "label": label_mapping[str(label)],
+                "score": round(score, 10),
+                "y_min": round(box[0], 10),
+                "x_min": round(box[1], 10),
+                "y_max": round(box[2], 10),
+                "x_max": round(box[3], 10),
+            }
+        )
 
     return {'predictions': results}
 
@@ -71,19 +68,17 @@ async def classify(data: dict):
 
     results = []
     for score, label, box in zip(scores, classes, boxes):
-        if score > 0.2:
-            results.append(
-                {
-                    "label": label_mapping[str(label)],
-                    "score": round(score, 10),
-                    "y_min": round(box[0], 10),
-                    "x_min": round(box[1], 10),
-                    "y_max": round(box[2], 10),
-                    "x_max": round(box[3], 10),
-                }
-            )
-        else:
-            break
+        label = int(float(label)) - 1
+        results.append(
+            {
+                "label": label_mapping[label],
+                "score": round(score, 10),
+                "y_min": round(box[0], 10),
+                "x_min": round(box[1], 10),
+                "y_max": round(box[2], 10),
+                "x_max": round(box[3], 10),
+            }
+        )
 
     return {'predictions': results}
 
