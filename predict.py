@@ -18,7 +18,7 @@ model = tf.saved_model.load('fine_tuned_model/saved_model')
 model = model.signatures['serving_default']
 
 with open('label_mapping.json', 'r') as f:
-    label_mapping = json.load(f)
+    label_mapping = json.load(f)['classes']
 
 
 @app.post(prefix + "/file/", response_class=UJSONResponse)
